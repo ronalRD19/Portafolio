@@ -41,16 +41,17 @@ function efectoHabilidades(){
         habilidades[2].classList.add("JavaScript");
         habilidades[3].classList.add("ExpressNode");
         habilidades[4].classList.add("React");
-        habilidades[5].classList.add("Python");
-        habilidades[6].classList.add("SringBoot");
-        habilidades[7].classList.add("JPA");
-        habilidades[8].classList.add("MySQL");
-        habilidades[9].classList.add("SQLServer");
-        habilidades[10].classList.add("Docker");
-        habilidades[11].classList.add("GitHub");
+        habilidades[5].classList.add("GitHub");
+        habilidades[6].classList.add("Docker");
+        habilidades[7].classList.add("Python");
+        habilidades[8].classList.add("SringBoot");
+        habilidades[9].classList.add("JPA");
+        habilidades[10].classList.add("MySQL");
+        habilidades[11].classList.add("SQLServer");
         habilidades[12].classList.add("Metodologiasgiles");
     }
 }
+
 
 
 //detecto el scrolling para aplicar la animacion de la barra de habilidades
