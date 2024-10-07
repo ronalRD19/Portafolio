@@ -59,27 +59,25 @@ window.onscroll = function(){
 } 
 
 //skillsdos
-
+/*
 // Función que aplica las animaciones de las habilidades
 function efectoHabilidades1() {
     var skillsdos = document.getElementById("skillsdos");
     var distancia_skillsdos = window.innerHeight - skillsdos.getBoundingClientRect().top;
     if (distancia_skillsdos >= 300) {
-        let habilidades = document.getElementsByClassName("progreso");
-        habilidades[0].classList.add("");
-        habilidades[1].classList.add("");
-        habilidades[2].classList.add("");
-        habilidades[3].classList.add("");
-        habilidades[4].classList.add("");
-        habilidades[5].classList.add("");
-        habilidades[6].classList.add("");
-        habilidades[7].classList.add("");
-        habilidades[8].classList.add("");
-        habilidades[9].classList.add("");
-    }
+        let habilidades1 = document.getElementsByClassName("progreso");
+        habilidades1[0].classList.add("Responsabilidad");
+        habilidades1[1].classList.add("Organización");
+        habilidades1[2].classList.add("Comunicaciónefectiva");
+        habilidades1[3].classList.add("TrabajoEnEquipo");
+        habilidades1[4].classList.add("Adaptabilidad");
+    
 }
 
 // Detecto el scrolling para aplicar la animación de las barras de habilidades
 window.onscroll = function() {
-    efectoHabilidades();
+    efectoHabilidades1();
 }
+
+}
+*/

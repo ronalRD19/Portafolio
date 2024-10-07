@@ -239,6 +239,7 @@ nav li {
 .sobremi button:hover .overlay{
     width: 100%;
 }
+
 /* SECCION S K I L L S */
 .skills{
     background-color: #252A2E;
@@ -437,170 +438,141 @@ nav li {
 
 .skillsdos .fila {
     display: flex;
+    flex-wrap: wrap; /* Permite que las columnas se ajusten en pantallas más pequeñas */
 }
 
 .skillsdos .fila .col {
-    width: 50%;
+    width: 100%; /* Por defecto ocupa todo el ancho */
     padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+    .skillsdos .fila .col {
+        width: 50%; /* Dos columnas en pantallas más grandes */
+    }
+}
+
+.skillsdos .skill {
+    margin-bottom: 30px;
 }
 
 .skillsdos .skill > span {
     font-weight: bold;
-    display: block;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center; /* Centra verticalmente los iconos y el texto */
 }
 
-.skillsdos .skill .barra-skill {
-    height: 8px;
-    width: 80%;
-    background-color: #131517;
-    position: relative;
-    margin-bottom: 30px;
+.skillsdos .skill > span i {
+    margin-right: 10px; /* Espacio entre el icono y el texto */
+    font-size: 24px; /* Ajusta el tamaño del icono */
+    color: #521cb6; /* Color del icono */
 }
 
-.skillsdos .skill .progreso {
-    background-color: #521cb6;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 8px;
-}
+/* Puedes eliminar las secciones de progreso y animaciones si no las necesitas */
 
-.skillsdos .skill .barra-skill span {
-    position: absolute;
-    height: 40px;
-    width: 40px;
-    background-color: #521cb6;
-    border-radius: 50px;
-    line-height: 40px;
-    text-align: center;
-    top: -17px;
-    right: -15px;
-    font-size: 14px;
-}
-
-/* Animaciones para habilidades profesionales */
-.skillsdos .skill .Python { width: 0%; animation: 2s Python forwards; }
-@keyframes Python { 0% { width: 0%; } 100% { width: 75%; } }
-
-.skillsdos .skill .SringBoot { width: 0%; animation: 2s SringBoot forwards; }
-@keyframes SringBoot { 0% { width: 0%; } 100% { width: 89%; } }
-
-.skillsdos .skill .JPA { width: 0%; animation: 2s JPA forwards; }
-@keyframes JPA { 0% { width: 0%; } 100% { width: 95%; } }
-
-.skillsdos .skill .MySQL { width: 0%; animation: 2s MySQL forwards; }
-@keyframes MySQL { 0% { width: 0%; } 100% { width: 81%; } }
-
-.skillsdos .skill .SQLServer { width: 0%; animation: 2s SQLServer forwards; }
-@keyframes SQLServer { 0% { width: 0%; } 100% { width: 55%; } }
-
-/* SECCION CURRICULUM */
-.curriculum{
+.curriculum {
     background-color: #252A2E;
     color: #fff;
     padding: 50px 20px;
 }
-.curriculum .contenido-seccion{
+
+.curriculum .contenido-seccion {
     max-width: 1100px;
     margin: auto;
 }
-.curriculum h2{
+
+.curriculum h2 {
     font-size: 48px;
     font-family: 'Righteous';
     text-align: center;
     padding: 20px 0;
-
 }
-.curriculum .fila{
+
+.curriculum .fila {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start; /* Alinea los elementos al principio */
 }
-.curriculum .fila .col{
-    width: 49%;
+
+.curriculum .fila .col {
+    width: 30%; /* Ajustar el ancho de las columnas */
     padding: 0 20px;
+    position: relative; /* Para permitir posicionamiento absoluto de la línea */
 }
-.curriculum .fila .col h3{
+
+.curriculum .fila .col h3 {
     font-size: 28px;
     font-family: 'Righteous';
     margin-bottom: 25px;
 }
-.curriculum .fila .izquierda{
-    border-right: 2px solid #252A2E;
-}
-.curriculum .fila .derecha{
-    border-left: 2px solid #252A2E;
-}
-.curriculum .fila .item{
+
+.curriculum .fila .item {
     padding: 25px;
     margin-bottom: 30px;
     background-color: #252A2E;
     position: relative;
 }
-.curriculum .fila .item h4{
+
+.curriculum .fila .item h4 {
     font-size: 20px;
     margin-bottom: 10px;
 }
-.curriculum .fila .item .casa{
+
+.curriculum .fila .item .casa {
     color: #521cb6;
     font-size: 22px;
     font-weight: bold;
     display: block;
 }
-.curriculum .fila .item .fecha{
+
+.curriculum .fila .item .fecha {
     display: block;
     color: #521cb6;
     margin-bottom: 10px;
 }
-.curriculum .fila .item p{
+
+.curriculum .fila .item p {
     line-height: 24px;
 }
-.curriculum .fila .izq{
-    border-right: 2px solid #521cb6;
-    margin-right: 20px;
+
+/* Certificaciones */
+.certificaciones {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el padding */
 }
-.curriculum .fila .der{
-    border-left: 2px solid #521cb6;
-    margin-left: 20px;
+
+.certificaciones li {
+    background-color: #252A2E; /* Color de fondo de los ítems */
+    color: #fff; /* Color del texto */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Espaciado entre ítems */
+    border-radius: 5px; /* Bordes redondeados */
+    position: relative; /* Para posicionar la viñeta */
+    padding-left: 25px; /* Espacio para la viñeta */
 }
-.curriculum .fila .item .conectori{
-    height: 2px;
-    background-color: #521cb6;
-    width: 47px;
+
+.certificaciones li::before {
+    content: "✔"; /* Cambia el símbolo aquí por lo que prefieras */
+    position: absolute; /* Posición absoluta para colocarlo correctamente */
+    left: 0; /* Alineado a la izquierda */
+    color: #521cb6; /* Color de la viñeta */
+}
+
+/* Línea morada para certificaciones */
+.certificaciones-container {
+    position: relative; /* Posicionamiento relativo para el contenedor */
+    padding-left: 20px; /* Espacio para la línea */
+}
+
+.conectord-certificaciones {
+    height: 100%; /* Asegúrate de que cubra toda la altura */
+    background-color: #521cb6; /* Color de la línea */
+    width: 2px; /* Ancho de la línea */
     position: absolute;
-    top: 50%;
-    right: -47px;
-    z-index: 5;
+    left: -10px; /* Ajusta la posición */
+    top: 0; /* Empieza desde la parte superior */
 }
-.curriculum .fila .item .conectori .circuloi{
-    display: block;
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    background-color: #521cb6;
-    float: right;
-    position: relative;
-    bottom: 4px;
-}
-.curriculum .fila .item .conectord{
-    height: 2px;
-    background-color: #521cb6;
-    width: 47px;
-    position: absolute;
-    top: 50%;
-    left: -47px;
-    z-index: 5;
-}
-.curriculum .fila .item .conectord .circulod{
-    display: block;
-    height: 10px;
-    width: 10px;
-    border-radius: 50%;
-    background-color: #521cb6;
-    float: left;
-    position: relative;
-    bottom: 4px;
-}
+
 /* SECCION PORTFOLIO */
 .portfolio{
     background-color: #0000;
