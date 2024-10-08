@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Open index.html",
-            "file": "c:\\Users\\AUXTIC\\Downloads\\portfolio-nick-main\\portfolio-nick-main\\index.html"
+            "file": "c:\\Users\\AUXTIC\\Downloads\\portfolio\\index.html"
         }
     ]
 }
