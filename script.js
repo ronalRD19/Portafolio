@@ -1,35 +1,44 @@
 let menuVisible = false;
-//Función que oculta o muestra el menu
-function mostrarOcultarMenu(){
-    if(menuVisible){
-        document.getElementById("nav").classList ="";
+
+// Función que oculta o muestra el menú
+function mostrarOcultarMenu() {
+    if (menuVisible) {
+        document.getElementById("nav").classList = "";
         menuVisible = false;
-    }else{
-        document.getElementById("nav").classList ="responsive";
+    } else {
+        document.getElementById("nav").classList = "responsive";
         menuVisible = true;
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const skillsItem = document.querySelector('nav ul li:nth-child(3)'); // Selecciona el elemento "SKILLS"
-    const submenu = skillsItem.querySelector('.submenu'); // Selecciona el submenú
+function toggleSubmenu(event) {
+    event.preventDefault(); // Evita que el enlace salte
+    const submenu = event.currentTarget.nextElementSibling;
 
-    skillsItem.addEventListener('mouseenter', function() {
-        submenu.style.display = 'block'; // Muestra el submenú
-    });
-
-    skillsItem.addEventListener('mouseleave', function() {
+    // Alterna la visibilidad del submenú
+    if (submenu.style.display === 'block') {
         submenu.style.display = 'none'; // Oculta el submenú
-    });
-});
+    } else {
+        submenu.style.display = 'block'; // Muestra el submenú
+        // Navega a la sección "SKILLS" si el submenú está visible
+        window.location.hash = "skills"; 
+    }
+}
 
-
-
-function seleccionar(){
-    //oculto el menu una vez que selecciono una opcion
+function seleccionar() {
+    // Oculto el menú una vez que selecciono una opción
     document.getElementById("nav").classList = "";
     menuVisible = false;
+
+    // Oculta el submenú al seleccionar una opción
+    const submenus = document.querySelectorAll('.submenu');
+    submenus.forEach(submenu => {
+        submenu.style.display = 'none';
+    });
 }
+
+
+
 //Funcion que aplica las animaciones de las habilidades
 function efectoHabilidades(){
     var skills = document.getElementById("skills");

@@ -10,7 +10,7 @@ html{
     scroll-behavior: smooth;
 }
 /* MENU */
-.contenedor-header{
+.contenedor-header {
     background: #000000;
     position: fixed;
     width: 100%;
@@ -18,7 +18,8 @@ html{
     left: 0;
     z-index: 99;
 }
-.contenedor-header header{
+
+.contenedor-header header {
     max-width: 1100px;
     margin: auto;
     display: flex;
@@ -26,25 +27,28 @@ html{
     align-items: center;
     padding: 15px 20px;
 }
-.contenedor-header header .logo a{
+
+.contenedor-header header .logo a {
     font-family: 'Righteous';
     font-size: 36px;
     color: #521cb6;
     text-decoration: none;
 }
-.contenedor-header header ul{
+
+.contenedor-header header ul {
     display: flex;
     list-style: none;
 }
-.contenedor-header header nav ul li a{
-    text-align: none;
+
+.contenedor-header header nav ul li a {
     color: #fff;
     margin: 0 15px;
     padding: 3px;
     transition: .5s;
     text-decoration: none;
 }
-.contenedor-header header nav ul li a:hover{
+
+.contenedor-header header nav ul li a:hover {
     color: #521cb6;
 }
 
@@ -52,39 +56,42 @@ html{
     list-style: none;
     padding: 0;
     margin: 0;
-    display: none; /* Mantenerlo oculto por defecto */
+    display: none; /* Oculto por defecto */
     position: absolute; /* Para que se superponga al menú */
-    background: rgb(0, 0, 0); /* Color de fondo del submenú */
-    border: 1px solid #000000; /* Borde opcional */
-    z-index: 10; /* Asegura que esté por encima de otros elementos */
-}
-
-nav ul {
-    position: relative; /* Necesario para el posicionamiento del submenú */
-}
-
-nav li {
-    position: relative; /* Necesario para el submenú */
+    background: #252A2E; /* Color de fondo del submenú */
+    z-index: 10; 
+    border: 1px solid #fff; /* Borde blanco */
+    border-radius: 4px; /* Opcional: para bordes redondeados *//* Asegura que esté por encima de otros elementos */
 }
 
 .submenu a {
-    display: block;
-    padding: 8px 16px;
-    text-decoration: none;
-    color: #333; /* Cambia el color según tu diseño */
+    display: block; /* Para que el área clicable sea más amplia */
+    padding: 10px 15px; /* Espaciado interno */
+    color: #fff; /* Color del texto */
+    text-decoration: none; /* Sin subrayado */
+    transition: background-color 0.3s; /* Transición suave al pasar el ratón */
 }
 
 .submenu a:hover {
-    background-color: #000000; /* Cambia el color de fondo al pasar el ratón */
+    background-color: #000000; /* Cambia el fondo al pasar el ratón */
 }
 
-.nav-responsive{
+nav ul li {
+    position: relative; /* Necesario para el submenú */
+}
+
+nav ul li:hover .submenu {
+    display: block; /* Muestra el submenú al pasar el ratón */
+}
+
+
+.nav-responsive {
     background-color: #521cb6;
-    color:#fff;
+    color: #fff;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
-    display: none;
+    display: none; /* Oculto por defecto en desktop */
 }
 /* SECCION I N I C I O */
 .inicio{
@@ -816,71 +823,90 @@ footer .arriba{
     font-size: 18px;
 }
 /* SECCION RESPONSIVE */
-@media screen and (max-width:980px){
-    nav{
-        display: none;
+@media screen and (max-width: 980px) {
+    nav {
+        display: none; /* Oculto por defecto en móvil */
     }
-    .nav-responsive{
-        display: block;
+
+    .nav-responsive {
+        display: block; /* Muestra el botón en móvil */
     }
-    nav.responsive{
-        display: block;
+
+    nav.responsive {
+        display: block; /* Muestra el menú cuando está activo */
         position: absolute;
         right: 0;
         top: 75px;
         background-color: #252A2E;
         width: 180px;
     }
-    nav.responsive ul{
-        display: block !important;
+
+    nav.responsive ul {
+        display: block !important; /* Muestra la lista del menú */
     }
-    nav.responsive ul li{
-        border-bottom: 1px solid #fff;
+
+    nav.responsive ul li {
+        border-bottom: 1px solid #fff; /* Separador entre elementos del menú */
         padding: 10px 0;
     }
+
+    .submenu {
+        position: relative; /* Asegura que el submenú no cause movimiento */
+        display: block !important; /* Siempre mostrar el submenú en móvil */
+    }
+
+    .submenu a {
+        padding: 10px; /* Mejora la área clickeable */
+        color: #fff; /* Color de texto para mejor contraste */
+    }
+
+    .submenu a:hover {
+        background-color: #521cb6; /* Color al pasar el ratón */
+    }
 }
-@media screen and (max-width:700px){
-    .sobremi .fila{
+
+@media screen and (max-width: 700px) {
+    .sobremi .fila {
         display: block;
     }
-    .sobremi .fila .col{
+    .sobremi .fila .col {
         width: fit-content;
     }
 
-    .skills .fila{
+    .skills .fila {
         display: block;
     }
-    .skills .fila .col{
+    .skills .fila .col {
         width: 100%;
     }
-    .skills .fila .col .barra-skill{
+    .skills .fila .col .barra-skill {
         width: 100%;
     }
 
-    .curriculum .fila{
+    .curriculum .fila {
         display: block;
     }
-    .curriculum .fila .col{
+    .curriculum .fila .col {
         width: 90%;
     }
-    .curriculum .fila .derecha{
+    .curriculum .fila .derecha {
         margin-left: 20px;
     }
 
-    .portfolio .galeria{
+    .portfolio .galeria {
         display: block;
         width: 100%;
     }
-    .portfolio .galeria .SQLServero{
+    .portfolio .galeria .SQLServero {
         max-width: 100%;
     }
-    .portfolio .galeria .SQLServero img{
+    .portfolio .galeria .SQLServero img {
         width: 100%;
     }
-    .contacto .fila{
+    .contacto .fila {
         display: block;
     }
-    .contacto .fila .col{
+    .contacto .fila .col {
         width: 100%;
     }
 }
