@@ -55,7 +55,7 @@ html{
     display: none; /* Mantenerlo oculto por defecto */
     position: absolute; /* Para que se superponga al menú */
     background: rgb(0, 0, 0); /* Color de fondo del submenú */
-    border: 1px solid #ccc; /* Borde opcional */
+    border: 1px solid #000000; /* Borde opcional */
     z-index: 10; /* Asegura que esté por encima de otros elementos */
 }
 
@@ -75,7 +75,7 @@ nav li {
 }
 
 .submenu a:hover {
-    background-color: #f0f0f0; /* Cambia el color de fondo al pasar el ratón */
+    background-color: #000000; /* Cambia el color de fondo al pasar el ratón */
 }
 
 .nav-responsive{
