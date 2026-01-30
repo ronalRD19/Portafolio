@@ -2,464 +2,1357 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="favicon-32x32.png" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>RZ</title>
-    <link rel="stylesheet" href="estilo.css">
+    <title>Ronald Zambrano | Backend Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #111111;
+            --bg-hover: #1a1a1a;
+            --text-primary: #e4e4e4;
+            --text-secondary: #737373;
+            --text-muted: #525252;
+            --accent-green: #22c55e;
+            --accent-green-dim: rgba(34, 197, 94, 0.1);
+            --accent-green-glow: rgba(34, 197, 94, 0.15);
+            --border-color: #262626;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(34, 197, 94, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 197, 94, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -3;
+        }
+
+        /* Scanline effect overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.03) 0px,
+                rgba(0, 0, 0, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            z-index: 9999;
+        }
+
+        /* Floating terminal commands background */
+        .terminal-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .floating-command {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-green);
+            opacity: 0;
+            white-space: nowrap;
+            animation: floatCommand 25s linear infinite;
+        }
+
+        @keyframes floatCommand {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.12;
+            }
+            95% {
+                opacity: 0.12;
+            }
+            100% {
+                transform: translateY(-100px) translateX(30px);
+                opacity: 0;
+            }
+        }
+
+        /* Scan line effect */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+            opacity: 0;
+            z-index: 9998;
+            animation: scanMove 6s linear infinite;
+            pointer-events: none;
+            box-shadow: 0 0 20px var(--accent-green);
+        }
+
+        @keyframes scanMove {
+            0% {
+                top: -3px;
+                opacity: 0;
+            }
+            2% {
+                opacity: 0.5;
+            }
+            98% {
+                opacity: 0.5;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+
+        /* Kali prompt watermark */
+        .kali-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent-green);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        /* Custom cursor glow effect */
+        .cursor-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            pointer-events: none;
+            z-index: 2;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            background: radial-gradient(circle at center, 
+                rgba(34, 197, 94, 0.18) 0%, 
+                rgba(34, 197, 94, 0.08) 25%, 
+                rgba(34, 197, 94, 0.02) 45%, 
+                transparent 60%);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        .logo::before {
+            content: '> ';
+            color: var(--text-muted);
+        }
+
+        .logo::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            width: 100%;
+        }
+
+        .hero-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            margin-bottom: 1.5rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 4px;
+        }
+
+        .hero-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-mono);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent-green);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            max-width: 500px;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hero-tagline .shield {
+            color: var(--accent-green);
+        }
+
+        .hero-stack {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-stack span {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0.3rem 0.7rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .hero-stack span:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            border: 1px solid var(--accent-green);
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--accent-green);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .section-label::before {
+            content: '// ';
+            color: var(--text-muted);
+        }
+
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* About */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .about-security {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.2rem;
+            background: var(--accent-green-dim);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .about-security-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .about-security-text {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent-green);
+        }
+
+        .about-security-text strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .about-details {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        .about-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .about-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .about-detail-label {
+            color: var(--text-muted);
+        }
+
+        .about-detail-value {
+            color: var(--text-primary);
+        }
+
+        .about-detail-value.accent {
+            color: var(--accent-green);
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-category {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .skill-category:hover {
+            border-color: var(--accent-green);
+        }
+
+        .skill-category h3 {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-category h3::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 2px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-item {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .skill-item:hover {
+            color: var(--accent-green);
+        }
+
+        /* Education & Certs */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .edu-item, .cert-item {
+            padding: 1.2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .edu-item:hover, .cert-item:hover {
+            border-color: var(--accent-green);
+        }
+
+        .edu-item h4, .cert-item h4 {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .edu-item p, .cert-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .cert-item.featured {
+            border-color: var(--accent-green);
+            background: var(--accent-green-dim);
+        }
+
+        .cert-item.featured h4 {
+            color: var(--accent-green);
+        }
+
+        .cert-badge {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .cert-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            text-decoration: none;
+        }
+
+        .cert-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .project-visual {
+            background: var(--bg-dark);
+            border-radius: 6px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            border: 1px solid var(--border-color);
+        }
+
+        .project-visual-text {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--border-color);
+        }
+
+        .project-info h3 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-info h3 a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .project-info h3 a:hover {
+            color: var(--accent-green);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tech span {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            background: var(--bg-dark);
+            border-radius: 3px;
+            color: var(--accent-green);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-links a {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.2s;
+        }
+
+        .project-links a:hover {
+            color: var(--accent-green);
+        }
+
+        /* Contact */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-text h3 {
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-text p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .contact-link-icon {
+            width: 20px;
+            text-align: center;
+            color: var(--accent-green);
+        }
+
+        .contact-terminal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1rem;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #febc2e; }
+        .terminal-dot.green { background: #28c840; }
+
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent-green);
+        }
+
+        .terminal-command {
+            color: var(--text-primary);
+        }
+
+        .terminal-output {
+            color: var(--text-muted);
+            padding-left: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-content a {
+            color: var(--accent-green);
+            text-decoration: none;
+        }
+
+        .footer-music {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .equalizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 12px;
+        }
+
+        .bar {
+            width: 3px;
+            background: var(--accent-green);
+            animation: equalize 1s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) { animation-delay: 0s; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes equalize {
+            0%, 100% { height: 4px; }
+            50% { height: 12px; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .about-content { grid-template-columns: 1fr; }
+            .edu-grid { grid-template-columns: 1fr; }
+            .project-card { grid-template-columns: 1fr; }
+            .contact-content { grid-template-columns: 1fr; }
+            .kali-prompt { display: none; }
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+        }
+    </style>
 </head>
 <body>
-    <!-- MENU ENCABEZADO -->
-    <div class="contenedor-header">
-        <header>
-            <div class="logo">
-                <a href="#">RON</a>
-            </div>
-            <nav id="nav">
-                <ul>
-                    <li><a href="#inicio" onclick="seleccionar()">INICIO</a></li>
-                    <li><a href="#sobremi" onclick="seleccionar()">SOBRE MI</a></li>
-                    <li>
-                        <a href="#skills" onclick="toggleSubmenu(event)">SKILLS</a>
-                        <ul class="submenu" style="display: none;">
-                            <li><a href="#skillsdos" onclick="seleccionar()">SKILLS PROFESIONALES</a></li>
-                        </ul>
-                    </li>
-                    
-                    
-                    <li><a href="#curriculum" onclick="seleccionar()">CURRICULUM</a></li>
-                    <li><a href="#portfolio" onclick="seleccionar()">PORTAFOLIO</a></li>
-                    <li><a href="#contacto" onclick="seleccionar()">CONTACTO</a></li>
-                </ul>
-            </nav>
-            <button class="nav-responsive" onclick="mostrarOcultarMenu()" aria-label="Toggle menu">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        </header>
-    </div>
+    <!-- Background effects -->
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+    <div class="terminal-bg" id="terminalBg"></div>
+    <div class="scan-line"></div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="kali-prompt">┌──(ronald㉿security)-[~/portfolio]<br>└─$ ./deploy.sh --production</div>
 
-    <!-- SECCION INICIO -->
-    <section id="inicio" class="inicio">
-       <div class="contenido-banner">
-        
-            <h1>Ronald Zambrano</h1>
-            <h2>Desarrollador BackEnd Junior.</h2>
-            <div class="redes">
-                <a href="https://www.linkedin.com/in/ronald-david-zambrano-salas-1757b173/"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="https://github.com/ronalRD19"><i class="fa-brands fa-github"></i></a>
-            
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">ronald_z</div>
+        <ul class="nav-links">
+            <li><a href="#about">about</a></li>
+            <li><a href="#skills">skills</a></li>
+            <li><a href="#projects">projects</a></li>
+            <li><a href="#contact">contact</a></li>
+        </ul>
+    </nav>
 
-
-            </div>
-        </div>
-
-        
-    </section>
-
-    <!-- SECCION SOBRE MI -->
-    <section id="sobremi" class="sobremi">
-        <div class="contenido-seccion">
-            <h2>Sobre Mí</h2>
-            <p><span>Hola, soy Ronald Zambrano.</span> Soy un desarrollador en ascenso con una sólida formación en análisis y desarrollo de software, habiendo completado mis estudios en el SENA. Mi pasión por la tecnología y la ciberseguridad me ha llevado a adquirir habilidades en desarrollo web y móvil utilizando HTML, CSS, JavaScript, Express, React, React native y Node.js.
-
-            
-            </p>
-
-            <div class="fila">
-                <!-- datos personales -->
-                <div class="col">
-                    <h3>Datos Personales</h3>
-                    <ul>
-                        
-                        <li>
-                            <strong>Teléfono</strong>
-                            +573023951718
-                        </li>
-                        <li>
-                            <strong>Email</strong>
-                             ronaldavid1908@hotmail.com
-                        </li>
-                        <li>
-                            <strong>Ubicacion</strong>
-                            Bogota-Colombia.
-                        </li>
-                        <li>
-                            <strong>Cargo</strong>
-                            <span>Desarrollador BackEnd Junior.</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- intereses -->
-                <div class="col">
-                    <h3>Intereses</h3>
-                    <div class="contenedor-intereses">
-                        <div class="interes">
-                            <i class="fa-solid fa-gamepad"></i>
-                            <span>JUEGOS</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-headphones"></i>
-                            <span>MUSICA</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-plane"></i>
-                            <span>VIAJAR</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-coffee"></i>
-                            <span>JAVA</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-person-hiking"></i>
-                            <span>DEPORTE</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-book"></i>
-                            <span>LIBROS</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-bicycle"></i>
-                            <span>RUTA</span>
-                        </div>
-                        <div class="interes">
-                            <i class="fa-solid fa-cat"></i>
-                            <span>ANIMALES</span>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <a href="img/CopiadeCurriculum (1).pdf" download>
-                <button>
-                    Descargar CV <i class="fa-solid fa-download"></i>
-                    <span class="overlay"></span>
-                </button>
-            </a>
-            
-        </div>
-    </section>
-
-    <!-- SECCION SKILLS -->
-    <section class="skills" id="skills">
-        <div class="contenido-seccion">
-            <h2>Skills Technical</h2>
-            <div class="fila">
-                <!-- Technical Skill -->
-                <div class="col">
-                    <br>
-                    <div class="skill">
-                        <span><i class="fa-brands fa-java"></i> Java</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>60%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fab fa-html5"></i> <i class="fab fa-css3-alt"></i> HTML & CSS</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>69%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fab fa-js-square"></i> JavaScript</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>60%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fab fa-node-js"></i> Express (Node.js)</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>60%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fab fa-react"></i> React</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>55%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fab fa"></i> Git <i class="fab fa-github"></i> GitHub </span><div class="barra-skill">
-                            <div class="progreso">
-                                <span>75%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fab fa-docker"></i> Docker </span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>65%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <!-- Professional Skills -->
-                <div class="col">
-                    <br>
-                    <div class="skill">
-                        <span><i class="fa-brands fa-python"></i> Python </span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>55%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fa-solid fa-cogs"></i> Spring Boot </span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>59%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fa-solid fa-database"></i> JPA</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>45%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fa-solid fa-database"></i> MySQL</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>70%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fa-solid fa-database"></i> SQL Server</span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>70%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skill">
-                        <span><i class="fas fa-tasks"></i> Metodologías ágiles (Scrum) </span>
-                        <div class="barra-skill">
-                            <div class="progreso">
-                                <span>60%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
- <!-- Skills dos-->
-
- <section class="skillsdos" id="skillsdos">
-    <div class="contenido-seccion">
-        <h2>Skills Professional</h2>
-        <div class="fila">
-            <div class="col">
-                <div class="skill">
-                    <span><i class="fas fa-check-circle"></i>
-                        Responsabilidad</span>
-                </div>
-                <div class="skill">
-                    <span><i class="fas fa-balance-scale"></i></i> Organización</span>
-                </div>
-                <div class="skill">
-                    <span><i class="fas fa-bullhorn"></i>
-                        Comunicación efectiva</span>
-                </div>
-                <div class="skill">
-                    <span><i class="fas fa-shield-alt"></i> Trabajo en equipo</span>
-                </div>
-                <div class="skill">
-                    <span><i class="fas fa-sync-alt"></i>
-                        Adaptabilidad</span>
-                </div>
-                <div class="skill">
-                    <span><i class="fas fa-globe"></i></i> 
-                        Ingles A2</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-  <!-- SECCION CURRICULUM -->
-  <section id="curriculum" class="curriculum">
-    <div class="contenido-seccion">
-        <h2>Curriculum</h2>
-        <div class="fila">
-            <div class="col izquierda">
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <div class="hero-status">available for work</div>
+                <h1>Ronald <span class="highlight">Zambrano</span></h1>
+                <p class="hero-subtitle">Backend Developer crafting secure and scalable APIs with Python, Flask & AWS.</p>
+                <p class="hero-tagline"><span class="shield">🛡️</span> ISO 27001 Lead Auditor · Análisis · Seguridad aplicada</p>
                 
-                <div class="item izq">
-                    <h4>Tecnólogo en Análisis y Desarrollo de Software </h4>
-                    <span class="casa">Servicio Nacional de Aprendizaje (SENA)</span>
-                    <span class="fecha">2022 - 2024</span>
-                    <div class="conectori">
-                        <div class="circuloi"></div>
+                <div class="hero-stack">
+                    <span>Python</span>
+                    <span>Flask</span>
+                    <span>AWS</span>
+                    <span>PostgreSQL</span>
+                    <span>Keycloak</span>
+                    <span>Java</span>
+                    <span>Spring Boot</span>
+                    <span>Docker</span>
+                </div>
+
+                <div class="hero-links">
+                    <a href="#contact" class="btn btn-primary">Contactar</a>
+                    <a href="https://www.linkedin.com/in/ronald-david-zambrano-salas-1757b173/" target="_blank" class="btn btn-ghost">LinkedIn →</a>
+                    <a href="https://github.com/ronalRD19" target="_blank" class="btn btn-ghost">GitHub →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about">
+            <div class="section-header">
+                <span class="section-label">sobre mí</span>
+                <h2 class="section-title">Backend · Seguridad · Análisis</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Desarrollador Backend con formación integral: desde el análisis y levantamiento de requerimientos hasta la implementación de arquitecturas seguras en producción. Combino la visión técnica con la capacidad de entender y documentar procesos de negocio.</p>
+                    <p>Actualmente responsable de la autenticación y seguridad en una fintech, implementando Keycloak para gestión de identidades, roles, grupos y control de acceso en producción. Trabajo con Flask y Python en AWS, bases de datos PostgreSQL y APIs seguras. También tengo experiencia sólida con Java y Spring Boot.</p>
+                    
+                    <div class="about-security">
+                        <div class="about-security-icon">📋</div>
+                        <div class="about-security-text">
+                            <strong>Análisis & Levantamiento</strong>
+                            Requerimientos, documentación técnica, modelado de procesos y diseño de soluciones.
+                        </div>
+                    </div>
+
+                    <div class="about-security" style="margin-top: 1rem;">
+                        <div class="about-security-icon">🛡️</div>
+                        <div class="about-security-text">
+                            <strong>ISO/IEC 27001:2022 Lead Auditor</strong>
+                            Seguridad desde el diseño: autenticación, autorización, control de acceso y auditoría de sistemas.
+                        </div>
+                    </div>
+                </div>
+                <div class="about-details">
+                    <div class="about-detail-item">
+                        <span class="about-detail-label">ubicación</span>
+                        <span class="about-detail-value">Bogotá, Colombia</span>
+                    </div>
+                    <div class="about-detail-item">
+                        <span class="about-detail-label">educación</span>
+                        <span class="about-detail-value">Ing. Software (en curso)</span>
+                    </div>
+                    <div class="about-detail-item">
+                        <span class="about-detail-label">formación</span>
+                        <span class="about-detail-value">Tecnólogo ADSO - SENA</span>
+                    </div>
+                    <div class="about-detail-item">
+                        <span class="about-detail-label">certificaciones</span>
+                        <span class="about-detail-value accent">15+</span>
+                    </div>
+                    <div class="about-detail-item">
+                        <span class="about-detail-label">estado</span>
+                        <span class="about-detail-value accent">disponible</span>
                     </div>
                 </div>
             </div>
-            
-            <div class="col derecha">
-                <div class="certificaciones-container">
-                    <div class="conectord-certificaciones"></div>
-                    <ul class="certificaciones">
-                        <li><strong>CertiProf Certified ISO/IEC 27001:2022 Lead Auditor</strong></li>
-                        <li><strong>Scrum Foundation</strong> - CertiProf</li>
-                        <li><strong>Diplomado en Programación en Java</strong> - Politécnico de Colombia</li>
-                        <li><strong>Despliegue de Aplicaciones y Servicios en Contenedores Docker</strong> - Servicio Nacional de Aprendizaje (SENA)</li>
-                        <li><strong>Fundamentos de la Ciberseguridad</strong> - Google</li>
-                        <li><strong>Ciberseguridad</strong> - Ministerio de Tecnologías de la Información y las Comunicaciones</li>
-                        <li><strong>Desarrollador Java</strong> - Colsubsidio Educación Tecnológica - CET</li>
-                        <li><strong>Certificación Java EE 7 Backend Server Application Development 2.0</strong> - EXACOM I.T. S.A.S.</li>
-                        <li><strong>Certificación Java SE 8 Programming I</strong> - EXACOM I.T. S.A.S.</li>
-                        <li><strong>Certificación Java SE 8 Programming II (OCP)</strong> - EXACOM I.T. S.A.S.</li>
-                        <li><strong>Desarrollador Back-end</strong> - Fundación Carlos Slim</li>
-                        <li><strong>Construcción de Bases de Datos con MySQL</strong> - Servicio Nacional de Aprendizaje (SENA)</li>
-                        <li><strong>Variables y Estructuras de Control en Python</strong> - Servicio Nacional de Aprendizaje (SENA)</li>
-                    </ul>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills">
+            <div class="section-header">
+                <span class="section-label">tech stack</span>
+                <h2 class="section-title">Tecnologías y herramientas</h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Backend</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Python</span>
+                        <span class="skill-item">Flask</span>
+                        <span class="skill-item">Java</span>
+                        <span class="skill-item">Spring Boot</span>
+                        <span class="skill-item">Node.js</span>
+                        <span class="skill-item">Express</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Frontend</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Angular</span>
+                        <span class="skill-item">React</span>
+                        <span class="skill-item">TypeScript</span>
+                        <span class="skill-item">JavaScript</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Databases</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">PostgreSQL</span>
+                        <span class="skill-item">MySQL</span>
+                        <span class="skill-item">SQL Server</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Cloud & DevOps</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">AWS</span>
+                        <span class="skill-item">Docker</span>
+                        <span class="skill-item">Keycloak</span>
+                        <span class="skill-item">Git</span>
+                        <span class="skill-item">GitHub Actions</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Security & Auth</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Keycloak</span>
+                        <span class="skill-item">OAuth 2.0</span>
+                        <span class="skill-item">JWT</span>
+                        <span class="skill-item">RBAC</span>
+                        <span class="skill-item">ISO 27001</span>
+                        <span class="skill-item">SGSI</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Metodologías</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Scrum</span>
+                        <span class="skill-item">Agile</span>
+                        <span class="skill-item">Git Flow</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Análisis</h3>
+                    <div class="skill-list">
+                        <span class="skill-item">Requerimientos</span>
+                        <span class="skill-item">Documentación</span>
+                        <span class="skill-item">UML</span>
+                        <span class="skill-item">Modelado de datos</span>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="col derecha">
+        <!-- Education & Certs -->
+        <section id="education">
+            <div class="section-header">
+                <span class="section-label">formación</span>
+                <h2 class="section-title">Educación y certificaciones</h2>
+            </div>
+            <div class="edu-grid">
+                <div>
+                    <h3 style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">// educación</h3>
+                    <div class="edu-item">
+                        <h4>Ingeniería de Software</h4>
+                        <p>Corporación Universitaria Iberoamericana · En curso</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Tecnólogo en Análisis y Desarrollo de Software</h4>
+                        <p>SENA · 2022 - 2024</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">// certificaciones destacadas</h3>
+                    <div class="cert-item featured">
+                        <span class="cert-badge">DESTACADA</span>
+                        <h4>ISO/IEC 27001:2022 Lead Auditor</h4>
+                        <p>CertiProf</p>
+                    </div>
+                    <div class="cert-item">
+                        <h4>Arquitectura en la Nube</h4>
+                        <p>Talento Tech AI</p>
+                    </div>
+                    <div class="cert-item">
+                        <h4>Java SE 8 Programming (OCP)</h4>
+                        <p>EXACOM</p>
+                    </div>
+                    <div class="cert-item">
+                        <h4>Fundamentos de Ciberseguridad</h4>
+                        <p>Google</p>
+                    </div>
+                    <a href="https://www.credly.com/users/ronald-david-zambrano-salas" target="_blank" class="cert-link">→ Ver todas las certificaciones en Credly</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects">
+            <div class="section-header">
+                <span class="section-label">proyectos</span>
+                <h2 class="section-title">Trabajo reciente</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-visual">
+                        <span class="project-visual-text">🎨</span>
+                    </div>
+                    <div class="project-info">
+                        <h3><a href="https://github.com/No-Country-simulation/s20-04-n" target="_blank">SubastArt</a></h3>
+                        <p class="project-description">Plataforma de subastas de arte online con sistema de pujas en tiempo real. Incluye gestión de usuarios, favoritos y historial de subastas.</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>Spring Boot</span>
+                            <span>PostgreSQL</span>
+                            <span>WebSockets</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://s20-04-n-frontend.onrender.com/" target="_blank">◈ Demo</a>
+                            <a href="https://subastart.onrender.com/swagger-ui/index.html" target="_blank">◈ API Docs</a>
+                            <a href="https://github.com/No-Country-simulation/s20-04-n" target="_blank">◈ Código</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-visual">
+                        <span class="project-visual-text">💰</span>
+                    </div>
+                    <div class="project-info">
+                        <h3><a href="https://github.com/No-Country-simulation/S19-07-N-WEBAPP" target="_blank">Fineazily</a></h3>
+                        <p class="project-description">Sistema de gestión financiera para PyMEs. Administración de sucursales, personal y finanzas con reportes visuales y automatizados.</p>
+                        <div class="project-tech">
+                            <span>Next.js</span>
+                            <span>Spring Boot</span>
+                            <span>PostgreSQL</span>
+                            <span>Docker</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://web-app-no-country.vercel.app" target="_blank">◈ Demo</a>
+                            <a href="https://s19-07-n-webapp.onrender.com/swagger-ui/index.html" target="_blank">◈ API Docs</a>
+                            <a href="https://github.com/No-Country-simulation/S19-07-N-WEBAPP" target="_blank">◈ Código</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-visual">
+                        <span class="project-visual-text">📦</span>
+                    </div>
+                    <div class="project-info">
+                        <h3><a href="https://ronalrd19.github.io/Sellertatpro/" target="_blank">SellerTat Pro</a></h3>
+                        <p class="project-description">Sistema de gestión con aplicación web y móvil para control de ventas e inventario en tiempo real.</p>
+                        <div class="project-tech">
+                            <span>Node.js</span>
+                            <span>React</span>
+                            <span>React Native</span>
+                            <span>MySQL</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://ronalrd19.github.io/Sellertatpro/" target="_blank">◈ Demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact">
+            <div class="section-header">
+                <span class="section-label">contacto</span>
+                <h2 class="section-title">Hablemos</h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-text">
+                    <h3>¿Tienes un proyecto en mente?</h3>
+                    <p>Estoy disponible para proyectos freelance, colaboraciones y oportunidades de tiempo completo. Si buscas un desarrollador que entienda tanto de código como de seguridad, hablemos.</p>
+                    
+                    <div class="contact-links">
+                        <a href="mailto:ronaldavid1908@hotmail.com" class="contact-link">
+                            <span class="contact-link-icon">✉</span>
+                            ronaldavid1908@hotmail.com
+                        </a>
+                        <a href="https://www.linkedin.com/in/ronald-david-zambrano-salas-1757b173/" target="_blank" class="contact-link">
+                            <span class="contact-link-icon">in</span>
+                            LinkedIn
+                        </a>
+                        <a href="https://github.com/ronalRD19" target="_blank" class="contact-link">
+                            <span class="contact-link-icon">⌘</span>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
                 
-                <div class="item der">
-                    <h4>Practicante Desarrollo</h4>
-                    <span class="casa">SEVIN LTDA.</span>
-                    <span class="fecha">Abril - Octubre</span>
-                    <p>Durante mis prácticas, realicé la refactorización del aplicativo core de la empresa, que está desarrollado en Java utilizando JSP y Servlets, así como SQL Server para la gestión de bases de datos. Este proceso no solo mejoró la eficiencia y mantenibilidad del código, sino que también optimizó la experiencia del usuario. Además, apoyé la implementación de la norma ISO/IEC 27001, contribuyendo a la creación de una política de desarrollo seguro que asegura la protección de la información y la gestión de riesgos, garantizando así un entorno de desarrollo más robusto y alineado con las mejores prácticas de seguridad.</p>
-                    <div class="conectord">
-                        <div class="circulod"></div>
+                <div class="contact-terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span class="terminal-title">ronald@portfolio ~ </span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">→</span>
+                            <span class="terminal-command"> whoami</span>
+                        </div>
+                        <div class="terminal-output">backend_developer</div>
+                        
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">→</span>
+                            <span class="terminal-command"> cat skills.txt</span>
+                        </div>
+                        <div class="terminal-output">python, flask, java, spring boot, aws, keycloak, security</div>
+                        
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">→</span>
+                            <span class="terminal-command"> echo $STATUS</span>
+                        </div>
+                        <div class="terminal-output" style="color: var(--accent-green);">available_for_hire</div>
+                        
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">→</span>
+                            <span class="terminal-command"> _</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
-</section>
 
-
-
-    <!-- SECCION PORTFOLIO -->
-    <!-- SECCION PORTFOLIO -->
-<section id="portfolio" class="portfolio">
-    <div class="contenido-seccion">
-        <h2>PORTAFOLIO</h2>
-        <div class="galeria">
-            <a href="https://ronalrd19.github.io/Sellertatpro/" class="proyecto">
-                <img src="img/home.jpg" alt="Proyecto 1">
-                <div class="overlay">
-                    <h3>Desarrollo Web</h3>
-                    <p>Tecnologías Usadas:</p>
-                        <p>Backend: Node.js, Express
-                        Frontend: React
-                        Base de Datos: MySQL (con XAMPP)
-                        Aplicación Móvil: React Native.</p>
-                </div>
-            </a>
-            <a href="https://ronalrd19.github.io/" class="proyecto">
-                <img src="img/inicio.jpg" alt="Proyecto 2">
-                <div class="overlay">
-                    <h3>Pagina Web Estatica</h3>
-                    <p>Tecnologías Usadas:</p>
-                    <p> HTML,
-                        CSS,
-                        JavaScript.</p>
-                </div>
-            </a>
-            <a href="proyecto3.html" class="proyecto">
-                <img src="img/ani.jpg" alt="Proyecto 3">
-                <div class="overlay">
-                    <h3>Desarrollo web Java</h3>
-                    <p>Tecnologías Usadas:</p>
-                    <p> JSP,
-                        Servlets,
-                        MySql.</p>
-
-                </div>
-            </a>
-        
-           
-            
-        </div>
-    </div>
-</section>
-
-
-    <!-- SECCION CONTACTO -->
-    <section id="contacto" class="contacto">
-        <div class="contenido-seccion">
-            <h2>CONTACTO</h2>
-            <div class="fila">
-                <!-- Formulario -->
-                <div class="col">
-                    <form action="https://formspree.io/f/mzzbpkzd" method="POST">
-                        <input type="text" name="nombre" placeholder="Tú Nombre" required>
-                        <input type="text" name="telefono" placeholder="Número telefónico" required>
-                        <input type="email" name="email" placeholder="Dirección de correo" required>
-                        <input type="text" name="tema" placeholder="Tema" required>
-                        <textarea name="mensaje" cols="30" rows="10" placeholder="Mensaje" required></textarea>
-                        <button type="submit">
-                            Enviar Mensaje<i class="fa-solid fa-paper-plane"></i>
-                            <span class="overlay"></span>
-                        </button>
-                    </form>
-                </div>
-                <!-- Mapa -->
-                <div class="col">
-                    <img src="img/bogo.jpg" alt="">
-                    <div class="info">
-                        <ul>
-                            <li>
-                                <i class="fa-solid fa-location-dot"></i>
-                                Bogota-Colombia
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-mobile-screen"></i>
-                                contactame: +573023951718
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-envelope"></i>
-                                Email: ronaldavid1908@hotmail.com
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-
-    <!-- footer -->
+    <!-- Footer -->
     <footer>
-        <a href="#inicio" class="arriba">
-            <i class="fa-solid fa-angles-up"></i>
-        </a>
-        <div class="redes">
-            <a href="https://www.linkedin.com/in/ronald-david-zambrano-salas-1757b173/"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="https://github.com/ronalRD19"><i class="fa-brands fa-github"></i></a>
+        <div class="container">
+            <div class="footer-content">
+                <p>Diseñado y desarrollado por <a href="#">Ronald Zambrano</a> © 2025</p>
+                <div class="footer-music">
+                    <div class="equalizer">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                    <span>coding with music</span>
+                </div>
             </div>
-            <p>&copy; 2024 Ronald Zambrano. Todos los derechos reservados.</p>
-            <div class="links">
-                <a href="#">Política de Privacidad</a>
-                <a href="#">Términos de Servicio</a>
-            </div>
-        </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Comandos de terminal para el fondo
+        const commands = [
+            'sudo systemctl start nginx',
+            'docker ps -a',
+            'kubectl get pods',
+            'ssh -i key.pem user@server',
+            'git push origin main',
+            'python manage.py runserver',
+            'flask run --host=0.0.0.0',
+            'aws s3 sync . s3://bucket',
+            'psql -U admin -d fintech',
+            'keycloak/bin/kc.sh start',
+            'nmap -sV 192.168.1.1',
+            'grep -r "password" /var/log',
+            'tail -f /var/log/auth.log',
+            'openssl genrsa -out key.pem 2048',
+            'chmod 600 ~/.ssh/id_rsa',
+            'SELECT * FROM users;',
+            'pip install flask-jwt-extended',
+            'mvn spring-boot:run',
+            'java -jar app.jar --server.port=8080',
+            'curl -X POST /api/auth/login',
+            'iptables -A INPUT -p tcp --dport 443',
+            'certbot --nginx -d domain.com',
+            'systemctl status keycloak',
+            'journalctl -u postgresql -f',
+            'htop',
+            'netstat -tulpn',
+            'ufw allow 22/tcp',
+            'export JWT_SECRET=***',
+            'pytest --cov=app tests/',
+            'ansible-playbook deploy.yml',
+            'aws ec2 describe-instances',
+            'docker-compose up -d',
+            'npm run build',
+            'keytool -genkeypair -alias server'
+        ];
+
+        // Generar comandos flotantes
+        const terminalBg = document.getElementById('terminalBg');
+        
+        function createFloatingCommand() {
+            const cmd = document.createElement('div');
+            cmd.className = 'floating-command';
+            cmd.textContent = '$ ' + commands[Math.floor(Math.random() * commands.length)];
+            cmd.style.left = Math.random() * 85 + '%';
+            cmd.style.animationDuration = (18 + Math.random() * 15) + 's';
+            cmd.style.animationDelay = Math.random() * 2 + 's';
+            terminalBg.appendChild(cmd);
+            
+            setTimeout(() => cmd.remove(), 35000);
+        }
+
+        // Crear comandos iniciales
+        for (let i = 0; i < 12; i++) {
+            setTimeout(() => createFloatingCommand(), i * 600);
+        }
+
+        // Seguir creando comandos
+        setInterval(createFloatingCommand, 2500);
+
+        // Cursor glow effect
+        const cursorGlow = document.getElementById('cursorGlow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.style.opacity = '1';
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.style.opacity = '0';
+        });
+
+        function animateGlow() {
+            glowX += (mouseX - glowX) * 0.12;
+            glowY += (mouseY - glowY) * 0.12;
+            
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            
+            requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section:not(.hero)').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(section);
+        });
+    </script>
 </body>
 </html>
